@@ -46,7 +46,23 @@ func Scrape(lenc string) []string {
 	return links
 }
 
+func TurnToWikipedia(title string) string {
+	tokens := strings.Split(title, " ")
+	var temp string = ""
+	for i := 0; i < len(tokens); i++ {
+		temp = temp + tokens[i]
+		if (i < len(tokens)-1) {
+			temp = temp + "_"
+		}
+	}
+	temp = "https://en.wikipedia.org/wiki/" + temp
+	return temp
+}
+
 func Back_Main(inpute LinkInfo) []string {
+	inpute.LinkValue = TurnToWikipedia(inpute.LinkValue)
+	inpute.FinValue = TurnToWikipedia(inpute.FinValue)
+	fmt.Println(inpute.LinkValue)
 	t1 := time.Now()
 	stuff := Scrape(inpute.LinkValue)
 	t2 := time.Since(t1)

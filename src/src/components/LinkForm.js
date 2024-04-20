@@ -9,7 +9,7 @@ function LinkForm({linkValue, setLinkValue}) {
     }
 
     return (
-        <input type="text" placeholder="Insert your starting link here" className="inoneline" onChange={handleChange} style={{ margin: '10px',width:'500px',height:'30px',borderRadius:'20px',padding:'5px' }}required />
+        <input type="text" placeholder="Insert your starting wikipedia title here" className="inoneline" onChange={handleChange} style={{ margin: '10px',width:'500px',height:'30px',borderRadius:'20px',padding:'10px',backgroundColor:'#200000',border:'3px solid white',color:'white' }}required />
     );
 };
 

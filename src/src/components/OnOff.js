@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './OnOff.css';
 import "./../fonts/Inter-Regular.ttf"
 
@@ -10,11 +10,11 @@ function OnOff({isOn,setIsOn}) {
 
   return (
     <div>
-        <div style={{display:'inline-block',verticalAlign:'middle',marginRight:'10px',fontFamily:"Inter Regular"}}>BFS</div>
+        <div style={{display:'inline-block',verticalAlign:'middle',marginRight:'10px',fontFamily:"Inter Regular",color:"white"}}>BFS</div>
         <div className={`switch ${isOn ? 'on' : 'off'}`} onClick={handleClick} style={{verticalAlign:'middle'}}>
             <div className="slider"></div>
         </div>
-        <div style={{display:'inline-block',verticalAlign:'middle',marginLeft:'10px',fontFamily:"Inter Regular"}}>IDS</div>
+        <div style={{display:'inline-block',verticalAlign:'middle',marginLeft:'10px',fontFamily:"Inter Regular",color:"white"}}>IDS</div>
     </div>
   );
 }

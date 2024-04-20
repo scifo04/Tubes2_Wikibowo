@@ -27,7 +27,7 @@ function SearchButton({isOn,linkValue,finValue,tempLinks,setTempLinks}) {
     };
 
     return (
-        <button onClick={handleClick}>Start Racing</button>
+        <button onClick={handleClick} style={{fontFamily:"Poppins",fontSize:"20px",border:"2px solid white",borderRadius:"10px",backgroundColor:"black",color:"white",width:"150px",height:"40px"}}>Start Racing</button>
     );
 }
 
