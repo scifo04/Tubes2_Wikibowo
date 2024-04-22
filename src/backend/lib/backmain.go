@@ -59,6 +59,19 @@ func TurnToWikipedia(title string) string {
 	return temp
 }
 
+func TurnToTitle(url string) string {
+	url = url[30 : len(url)-0]
+	temp := ""
+	tokens := strings.Split(url, "_")
+	for i := 0; i < len(tokens); i++ {
+		temp = temp + tokens[i]
+		if (i < len(tokens)-1) {
+			temp = temp + " "
+		}
+	}
+	return temp
+}
+
 func Back_Main(inpute LinkInfo) []string {
 	inpute.LinkValue = TurnToWikipedia(inpute.LinkValue)
 	inpute.FinValue = TurnToWikipedia(inpute.FinValue)

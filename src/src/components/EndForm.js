@@ -9,7 +9,7 @@ function EndForm({finValue, setFinValue}) {
     }
 
     return (
-        <input type="text" placeholder="Insert your final link" className="inoneline" onChange={handleChange} style={{ margin: '10px',width:'500px',height:'30px',borderRadius:'20px',padding:'10px',backgroundColor:'#000020',border:'3px solid white',color:'white' }} required />
+        <input type="text" placeholder="Insert your end title" className="inoneline" onChange={handleChange} style={{ margin: '10px',width:'500px',height:'30px',borderRadius:'20px',padding:'10px',backgroundColor:'#000020',border:'3px solid white',color:'white' }} required />
     );
 };
 

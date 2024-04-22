@@ -7,6 +7,7 @@ import EndForm from './components/EndForm';
 import OnOff from './components/OnOff';
 import "./fonts/Inter-Bold.ttf"
 import W from "./assets/w.png"
+import { Graph } from 'react-d3-graph';
 
 function Home() {
   const [tempLinks, setTempLinks] = useState('');
