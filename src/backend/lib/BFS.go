@@ -14,16 +14,16 @@ func BFS(i int, start string, end string, listScrape [][]string, eng Engine, ch 
 		eng.Depth++
 		fmt.Println("Layer ",eng.Depth)
 	}
-	fmt.Print(len(listScrape))
+	// fmt.Print(len(listScrape))
 	
 	if (i == -1){ //listScrape masih kosong
-		fmt.Println(" ",start)
+		// fmt.Println(" ",start)
 		chScrape := make(chan [][]string)
 		go Scrape([]string{start},eng,chScrape,wg,sem)
 		tempScrape = <-chScrape
 		listScrape = append(listScrape, tempScrape...)
 	} else {
-		fmt.Println(" ",listScrape[i])
+		// fmt.Println(" ",listScrape[i])
 		chScrape := make(chan[][] string)
 		go Scrape(listScrape[i],eng,chScrape,wg,sem)
 		tempScrape = <-chScrape

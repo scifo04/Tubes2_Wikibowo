@@ -14,6 +14,10 @@ var res []string
 
 var exec int64
 
+var len int
+
+var lenks []string
+
 func handleInsert(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
@@ -49,14 +53,18 @@ func handleInsert(w http.ResponseWriter, r *http.Request) {
 	// fmt.Printf("Received data: %+v\n", pointDataGlobale)
 
 	// var time_string string;
-	res,exec = back.Back_Main(gotInfo,100)
+	res,exec,len,lenks = back.Back_Main(gotInfo,300)
 	
 	tempResponse := struct {
 		Lencs []string `json:"links"`
 		Exec int64 `json:"exec"`
+		Len int `json:"len"`
+		Lincs []string `json:"url"`
 	}{
 		Lencs: res,
 		Exec: exec,
+		Len: len,
+		Lincs: lenks,
 	}
 	// responseData := struct {
 	// 	Message     string   `json:"message"`

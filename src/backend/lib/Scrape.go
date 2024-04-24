@@ -1,11 +1,22 @@
 package back
 
 import (
-	"github.com/gocolly/colly"
 	"fmt"
+	"regexp"
 	"strings"
 	"sync"
+
+	"github.com/gocolly/colly"
+	// "regexp"
 )
+
+// func shouldFilter(url string) bool {
+//     // Apply your filtering logic here
+//     if (strings.Contains(url,"Category:") || strings.Contains(url,"Wikipedia:") || strings.Contains(url,"Special:") || strings.Contains(url,"File:") || strings.Contains(url,"Help:") || strings.Contains(url,"Talk:") || strings.Contains(url,"Portal:") || strings.Contains(url,"Template:") || strings.Contains(url,"Template_talk:") || strings.Contains(url,"Main_Page")) {
+//         return false
+//     }
+//     return true
+// }
 
 func Scrape(lenc []string, eng Engine, ch chan<- [][]string, wg *sync.WaitGroup,sem chan struct{}) { //ex: [start, first click] -> [start,first click, second click] , [start,first click, second click], ...
 	defer func() {
@@ -16,22 +27,39 @@ func Scrape(lenc []string, eng Engine, ch chan<- [][]string, wg *sync.WaitGroup,
     }()
 	
 	var links [][]string
-    c := colly.NewCollector()
+    c := colly.NewCollector(
+		colly.DisallowedURLFilters(
+			regexp.MustCompile("Category:"),
+			regexp.MustCompile("Wikipedia:"),
+			regexp.MustCompile("Special:"),
+			regexp.MustCompile("File:"),
+			regexp.MustCompile("Help:"),
+			regexp.MustCompile("Talk:"),
+			regexp.MustCompile("Portal:"),
+			regexp.MustCompile("Template:"),
+			regexp.MustCompile("Template_talk:"),
+			regexp.MustCompile("Main_Page"),
+		),
+		colly.URLFilters(
+			regexp.MustCompile("en.wikipedia.org/wiki"),
+		),
+	)
 		// colly.AllowedDomains("en.wikipedia.org","https://en.wikipedia.org","en.wikipedia.org/","https://en.wikipedia.org/",))
 
     c.OnRequest(func(r *colly.Request) {
 		// fmt.Println("Visiting: ",lenc[len(lenc) - 1])
         r.Headers.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36")
     })
-
+	
     c.OnResponse(func(r *colly.Response) {
-        // fmt.Println("Response Code:", r.StatusCode)
+		// fmt.Println("Response Code:", r.StatusCode)
     })
-
+	
     // to get the "a" tag
-    c.OnHTML("a", func(e *colly.HTMLElement) {
+    c.OnHTML("a[href]", func(e *colly.HTMLElement) {
 		// Extract the text and href attribute of the <a> tag
 		linkURL := e.Attr("href")
+		// fmt.Println(linkURL)
 
 		if (!strings.Contains(linkURL,"https://en.wikipedia.org")) {
 			linkURL = "https://en.wikipedia.org" + linkURL
@@ -44,8 +72,10 @@ func Scrape(lenc []string, eng Engine, ch chan<- [][]string, wg *sync.WaitGroup,
 				if (!eng.Cache[linkURL] || eng.End == linkURL) && eng.Start != linkURL {
 					eng.Cache[linkURL] = true
 					linkToAppend = append(linkToAppend, linkURL)
+				} else {
+					return
 				}
-				// fmt.Println(linkToAppend)
+				fmt.Println(linkToAppend)
 				if (len(linkToAppend) == eng.Depth+1) {
 					links = append(links, linkToAppend)
 				}
@@ -56,6 +86,8 @@ func Scrape(lenc []string, eng Engine, ch chan<- [][]string, wg *sync.WaitGroup,
 				if (!eng.Cache[linkURL] || eng.End == linkURL) && eng.Start != linkURL {
 					eng.Cache[linkURL] = true
 					linkToAppend = append(linkToAppend, linkURL)
+				} else {
+					return
 				}
 				// fmt.Println(linkToAppend)
 				if (len(linkToAppend) == eng.Depth+1) {

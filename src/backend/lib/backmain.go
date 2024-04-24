@@ -6,7 +6,7 @@ import (
 	"sync"
 )
 
-func Back_Main(inpute LinkInfo, maxConcurrency int) ([]string, int64) {
+func Back_Main(inpute LinkInfo, maxConcurrency int) ([]string, int64, int, []string) {
 	var engine Engine
 	fmt.Println("Layer ",engine.Depth)
 	inpute.LinkValue = TurnToWikipedia(inpute.LinkValue)
@@ -14,6 +14,7 @@ func Back_Main(inpute LinkInfo, maxConcurrency int) ([]string, int64) {
 	engine = createEngine(engine,inpute.LinkValue,inpute.FinValue,0,inpute.IsName)
 	// cache = []string{}
 	var listSolution []string
+	var linkSolution []string
 	ch := make(chan []string)
 	var wg sync.WaitGroup
 	sem := make(chan struct{},maxConcurrency)
@@ -28,9 +29,13 @@ func Back_Main(inpute LinkInfo, maxConcurrency int) ([]string, int64) {
 	for i := 0; i < len(listSolution); i++ {
 		listSolution[i] = TurnToTitle(listSolution[i])
 	}
+	for i := 0; i < len(listSolution); i++ {
+		linkSolution = append(linkSolution, TurnToWikipedia(listSolution[i]))
+	}
 	t3 := time.Since(t1)
 	t2 := time.Since(t1).Milliseconds()
 	// fmt.Println(cache)
+	fmt.Println(len(engine.Cache))
 	fmt.Println("Execution Time: ",t3)
-	return listSolution,t2
+	return listSolution,t2,len(engine.Cache),linkSolution
 }

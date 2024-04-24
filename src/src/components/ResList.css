@@ -1,0 +1,15 @@
+.third {
+    background-color: #26262675;
+    border-width: 3px;
+    border-style: solid;
+    border-color: #ffffff;
+    width: 90%;
+    margin: auto;
+    margin-top: 60px;
+    margin-bottom: 60px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    border-radius: 20px;
+    font-size: 40px;
+    color: #ffffff;
+}

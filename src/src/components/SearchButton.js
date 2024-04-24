@@ -1,7 +1,8 @@
 import React from "react";
 
-function SearchButton({isOn,linkValue,finValue,tempLinks,setTempLinks,isName}) {
+function SearchButton({isOn,linkValue,finValue,setTempLinks,isName,setExec,setLen,setUrls,setOpen}) {
     const handleClick = async () => {
+        setOpen(true)
         try {
             const response = await fetch('http://localhost:8000', {
                 method: 'POST',
@@ -22,6 +23,10 @@ function SearchButton({isOn,linkValue,finValue,tempLinks,setTempLinks,isName}) {
 
             const tempResponse = await response.json();
             setTempLinks(tempResponse.links);
+            setExec(tempResponse.exec);
+            setLen(tempResponse.len);
+            setUrls(tempResponse.url)
+            setOpen(false)
         } catch (error) {
             console.error('Error:', error);
         }
