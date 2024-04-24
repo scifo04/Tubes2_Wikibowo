@@ -1,6 +1,6 @@
 import React from "react";
 
-function SearchButton({isOn,linkValue,finValue,tempLinks,setTempLinks}) {
+function SearchButton({isOn,linkValue,finValue,tempLinks,setTempLinks,isName}) {
     const handleClick = async () => {
         try {
             const response = await fetch('http://localhost:8000', {
@@ -12,6 +12,7 @@ function SearchButton({isOn,linkValue,finValue,tempLinks,setTempLinks}) {
                     linkValue: linkValue,
                     finValue: finValue,
                     isOn: isOn,
+                    isName: isName,
                 }),
             });
 
