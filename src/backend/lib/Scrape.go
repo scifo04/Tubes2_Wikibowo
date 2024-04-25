@@ -75,7 +75,7 @@ func Scrape(lenc []string, eng Engine, ch chan<- [][]string, wg *sync.WaitGroup,
 				} else {
 					return
 				}
-				fmt.Println(linkToAppend)
+				// fmt.Println(linkToAppend)
 				if (len(linkToAppend) == eng.Depth+1) {
 					links = append(links, linkToAppend)
 				}

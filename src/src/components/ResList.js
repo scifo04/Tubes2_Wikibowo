@@ -1,18 +1,18 @@
 import React from 'react';
 import './ResList.css';
 
-const ResList = ({ tempLinks, urls, exec, len }) => {
+const ResList = ({resultResponse }) => {
   // Conditionally render based on whether the list is empty or not
-  if (tempLinks.length === 0) {
+  if (resultResponse.resultLink.length === 0) {
     return <p></p>;
   }
 
   // Display list items if the list is not empty
   return (
     <div className='third'>
-      <p>Racing done in <b>{exec}</b> ms after traversing through <b>{len}</b> articles</p>
-      {tempLinks.map((item, index) => (
-        <p>{index+1}. <a href={urls[index]} style={{textDecoration:"none",color:"white"}}>{item}</a></p>
+      <p>Racing done in <b>{resultResponse.exec}</b> ms after traversing through <b>{resultResponse.len}</b> articles</p>
+      {resultResponse.resultLink.map((item, index) => (
+        <p key={index}>{index+1}. <a href={resultResponse.urls[index]} style={{textDecoration:"none",color:"white"}}>{item}</a></p>
       ))}
     </div>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 
-function SearchButton({isOn,linkValue,finValue,setTempLinks,isName,setExec,setLen,setUrls,setOpen}) {
+function SearchButton({isOn,linkValue, setResultResponse, isName, setOpen}) {
     const handleClick = async () => {
         setOpen(true)
         try {
@@ -10,8 +10,8 @@ function SearchButton({isOn,linkValue,finValue,setTempLinks,isName,setExec,setLe
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    linkValue: linkValue,
-                    finValue: finValue,
+                    linkValue: linkValue.startLink,
+                    finValue: linkValue.endLink,
                     isOn: isOn,
                     isName: isName,
                 }),
@@ -22,10 +22,12 @@ function SearchButton({isOn,linkValue,finValue,setTempLinks,isName,setExec,setLe
             }
 
             const tempResponse = await response.json();
-            setTempLinks(tempResponse.links);
-            setExec(tempResponse.exec);
-            setLen(tempResponse.len);
-            setUrls(tempResponse.url)
+            setResultResponse({
+                exec: tempResponse.exec,
+                len: tempResponse.len,
+                urls: tempResponse.url,
+                resultLink: tempResponse.links,
+            })
             setOpen(false)
         } catch (error) {
             console.error('Error:', error);
