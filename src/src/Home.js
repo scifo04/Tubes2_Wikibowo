@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; 
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import './Home.css';
 import LinkForm from './components/LinkForm';
@@ -9,6 +9,7 @@ import "./fonts/Inter-Bold.ttf"
 import W from "./assets/w.png"
 import Namespaces from './components/Namespaces';
 import ResList from './components/ResList';
+import Greph from './components/Greph';
 
 function Home() {
   const [tempLinks, setTempLinks] = useState('');
@@ -20,8 +21,27 @@ function Home() {
   const [len, setLen] = useState(0);
   const [urls, setUrls] = useState('');
   const [open, setOpen] = useState('');
+  const [nodes, setNodes] = useState([]);
+  const [links, setLinks] = useState([]);
 
-  console.log(tempLinks);
+  useEffect(() => {
+    if (tempLinks.length > 0) {
+      setNodes(tempLinks.map((name, index) => ({
+        id : index+1,
+        name : name
+      })))
+    }
+  }, [tempLinks]);
+
+  useEffect(() => {
+    if (tempLinks.length > 1) {
+      const newLinks = [];
+      for (let i = 0; i < tempLinks.length - 1; i++) {
+        newLinks.push({ source: i + 1, target: i + 2 });
+      }
+      setLinks(newLinks);
+    }
+  }, [tempLinks]);
 
   return (
     <div>
@@ -51,6 +71,9 @@ function Home() {
       </div>
       <div>
           <ResList  tempLinks={tempLinks} urls={urls} exec={exec} len={len}/>
+      </div>
+      <div className='fourth'>
+          <Greph nodes={nodes} links={links} tempLinks={tempLinks}></Greph>
       </div>
     </div>
   );

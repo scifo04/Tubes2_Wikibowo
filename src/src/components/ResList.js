@@ -11,6 +11,7 @@ const ResList = ({ tempLinks, urls, exec, len }) => {
   return (
     <div className='third'>
       <p>Racing done in <b>{exec}</b> ms after traversing through <b>{len}</b> articles</p>
+      <p>Link visited: <b>{tempLinks.length} links</b></p>
       {tempLinks.map((item, index) => (
         <p>{index+1}. <a href={urls[index]} style={{textDecoration:"none",color:"white"}}>{item}</a></p>
       ))}
