@@ -31,23 +31,23 @@ function Home() {
   const [links, setLinks] = useState([]);
 
   useEffect(() => {
-    if (tempLinks.length > 0) {
-      setNodes(tempLinks.map((name, index) => ({
+    if (resultResponse.resultLink.length > 0) {
+      setNodes(resultResponse.resultLink.map((name, index) => ({
         id : index+1,
         name : name
       })))
     }
-  }, [tempLinks]);
+  }, [resultResponse.resultLink]);
 
   useEffect(() => {
-    if (tempLinks.length > 1) {
+    if (resultResponse.resultLink.length > 1) {
       const newLinks = [];
-      for (let i = 0; i < tempLinks.length - 1; i++) {
+      for (let i = 0; i < resultResponse.resultLink.length - 1; i++) {
         newLinks.push({ source: i + 1, target: i + 2 });
       }
       setLinks(newLinks);
     }
-  }, [tempLinks]);
+  }, [resultResponse.resultLink]);
 
   function handleInputSearch(value,type){
     if (type === "Start"){
@@ -95,10 +95,7 @@ function Home() {
         <ResList resultResponse={resultResponse}/>
       </div>
       <div className='fourth'>
-          <Greph nodes={nodes} links={links} tempLinks={tempLinks}></Greph>
-      </div>
-      <div className='fourth'>
-          <Greph nodes={nodes} links={links} tempLinks={tempLinks}></Greph>
+          <Greph nodes={nodes} links={links} tempLinks={resultResponse.resultLink}></Greph>
       </div>
     </div>
   );
