@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.custom-font {
+    font-family: degular-variable, sans-serif;
+    font-style: normal;
+    font-variation-settings: "ital" 0, "opsz" 6, "wght" 200;
+    
+}
