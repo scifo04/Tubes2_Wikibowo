@@ -1,4 +1,3 @@
-import { json } from "d3";
 import React, { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 
@@ -41,14 +40,14 @@ function SearchInput({setLinkValue,type}) {
         }
     }
         
-        const handleChange = async (e) => {
-            if (e !== null && e !== undefined && e !== '') {
-                const value = e.target.value;
-                setLinkValue(value,type);
-                setTitleSuggestion({
-                    title: value,
-                    suggestions: [],
-                })
+    const handleChange = async (e) => {
+        if (e !== null && e !== undefined && e !== '') {
+            const value = e.target.value;
+            setLinkValue(value,type);
+            setTitleSuggestion({
+                title: value,
+                suggestions: [],
+            })
         }
     }
     return (

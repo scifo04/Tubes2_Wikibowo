@@ -1,8 +1,35 @@
+import { link } from "d3";
 import React from "react";
 
-function SearchButton({isOn,linkValue, setResultResponse, isName, setOpen}) {
+function SearchButton({isOn,linkValue, setResultResponse, isName, isError}) {
+    
+    const handleIsLinkExist = async () => {
+        try {
+            let whatError = []
+            for (const key in linkValue) {
+                let response = await fetch(
+                    `https://api.allorigins.win/get?url=${encodeURIComponent(
+                        `https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&srsearch=${linkValue[key]}`
+                    )}`
+                )
+
+                const data = await response.json()
+                const jsonData = JSON.parse(data.contents)
+                // console.log(jsonData.query.search.map(item => item.title))
+                if (jsonData.query.search.map(item => item.title).length === 0){
+                    whatError.push(linkValue[key])
+                }
+            }
+            isError(whatError)
+            if (whatError.length === 0){
+                handleClick()
+            }
+        } catch (error) {
+            console.error('Error fetching suggestions:', error);
+        }
+    }
+
     const handleClick = async () => {
-        setOpen(true)
         try {
             const response = await fetch('http://localhost:8000', {
                 method: 'POST',
@@ -28,14 +55,13 @@ function SearchButton({isOn,linkValue, setResultResponse, isName, setOpen}) {
                 urls: tempResponse.url,
                 resultLink: tempResponse.links,
             })
-            setOpen(false)
         } catch (error) {
             console.error('Error:', error);
         }
     };
 
     return (
-        <button onClick={handleClick} style={{fontFamily:"Poppins",fontSize:"20px",border:"2px solid white",borderRadius:"10px",backgroundColor:"black",color:"white",width:"150px",height:"40px"}}>Start Racing</button>
+        <button onClick={handleIsLinkExist} style={{fontFamily:"Poppins",fontSize:"20px",border:"2px solid white",borderRadius:"10px",backgroundColor:"black",color:"white",width:"150px",height:"40px"}}>Start Racing</button>
     );
 }
 

@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import './Home.css';
-// import LinkForm from './components/LinkForm';
 import SearchButton from './components/SearchButton';
-// import EndForm from './components/EndForm';
 import OnOff from './components/OnOff';
 import "./fonts/Inter-Bold.ttf"
 import W from "./assets/w.png"
@@ -11,7 +9,7 @@ import Namespaces from './components/Namespaces';
 import ResList from './components/ResList';
 import SearchInput from './components/SearchInput'
 import Greph from './components/Greph';
-
+import Swal from 'sweetalert2'
 function Home() {
   const [linkValue, setLinkValue] = useState({
     startLink : '',
@@ -19,7 +17,7 @@ function Home() {
   })
   const [isOn, setIsOn] = useState(false);
   const [isName, setIsName] = useState(false);
-  const [open, setOpen] = useState(''); //untuk open popup message
+  const [isError, setIsError] = useState([]);
   const [resultResponse, setResultResponse] = useState({
     exec : 0,
     len : 0,
@@ -66,9 +64,27 @@ function Home() {
       })
     }
   }
+  const errorMessage = () => {
+    let showError = "Title "
+    showError += isError[0]
+    if (isError.length > 1) {
+      showError += " and "
+      showError += isError[1]
+    }
+    showError+= " dont exist!"
+    Swal.fire({
+      title: 'Error!',
+      text: showError,
+      icon: 'error',
+      confirmButtonText: 'Try Another Title'
+    })
+    console.log(isError)
+    setIsError([])
+  }
+
   return (
     <div>
-      {open && console.log("Process")}
+      {isError.length !== 0 && errorMessage()}
       <div className='topnav'>
         <img src={W} width='70px' height='70px' alt=''></img>
         <h1 style={{fontFamily:"Inter",color:"#ffffff",display:"inline-block"}}>WIKIBOWO DA WIKIRACER</h1>
@@ -89,7 +105,7 @@ function Home() {
           linkValue={linkValue} 
           setResultResponse={setResultResponse} 
           isName={isName} 
-          setOpen={setOpen}/>
+          isError={setIsError}/>
       </div>
       <div>
         <ResList resultResponse={resultResponse}/>
