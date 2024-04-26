@@ -1,8 +1,18 @@
 import { link } from "d3";
 import React from "react";
-
+import Swal from "sweetalert2";
 function SearchButton({isOn,linkValue, setResultResponse, isName, isError}) {
-    
+    const showSuccess = () => {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Link Valid! Start Searching  ",
+          showConfirmButton: false,
+          timer: 1500
+        });
+        
+    }
+
     const handleIsLinkExist = async () => {
         try {
             let whatError = []
@@ -22,6 +32,7 @@ function SearchButton({isOn,linkValue, setResultResponse, isName, isError}) {
             }
             isError(whatError)
             if (whatError.length === 0){
+                showSuccess()
                 handleClick()
             }
         } catch (error) {

@@ -82,6 +82,7 @@ function Home() {
     setIsError([])
   }
 
+
   return (
     <div>
       {isError.length !== 0 && errorMessage()}
@@ -110,9 +111,11 @@ function Home() {
       <div>
         <ResList resultResponse={resultResponse}/>
       </div>
-      <div className='fourth'>
+      {resultResponse.resultLink.length !== 0 &&
+        <div className='fourth'>
           <Greph nodes={nodes} links={links} tempLinks={resultResponse.resultLink}></Greph>
-      </div>
+        </div>
+      }
     </div>
   );
 }
