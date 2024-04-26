@@ -11,6 +11,7 @@ const ResList = ({resultResponse }) => {
   return (
     <div className='third'>
       <p>Racing done in <b>{resultResponse.exec}</b> ms after traversing through <b>{resultResponse.len}</b> articles</p>
+      <p>Links Visited/Depth: <b>{resultResponse.resultLink.length}</b> links</p>
       {resultResponse.resultLink.map((item, index) => (
         <p key={index}>{index+1}. <a href={resultResponse.urls[index]} style={{textDecoration:"none",color:"white"}}>{item}</a></p>
       ))}
