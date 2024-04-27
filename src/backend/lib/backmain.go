@@ -21,28 +21,29 @@ func Back_Main(inpute LinkInfo, maxConcurrency int) ([]string, int64, int, []str
 	t1 := time.Now()
 
 	g := NewGraph()
+	var cnt int = 0
 
 	if inpute.IsOn {
-		listSolution, _ = IDS(g, inpute.LinkValue, inpute.FinValue)
-		// IDS()
+		listSolution, _ = IDS(g, inpute.LinkValue, inpute.FinValue, inpute.IsName)
+		for _, value := range g.Nodes {
+			cnt += len(value.Child)
+		}
 	} else {
 		go BFS(-1, inpute.LinkValue, inpute.FinValue, [][]string{}, engine, ch, &wg, sem)
 		listSolution = <-ch
 	}
+
 	for i := 0; i < len(listSolution); i++ {
 		listSolution[i] = TurnToTitle(listSolution[i])
 	}
+
 	for i := 0; i < len(listSolution); i++ {
 		linkSolution = append(linkSolution, TurnToWikipedia(listSolution[i]))
 	}
+
 	t3 := time.Since(t1)
 	t2 := time.Since(t1).Milliseconds()
 	// fmt.Println(cache)
-
-	var cnt int = 0
-	for _, value := range g.Nodes {
-		cnt += len(value.Child)
-	}
 
 	fmt.Println("Execution Time: ", t3)
 	if inpute.IsOn {
