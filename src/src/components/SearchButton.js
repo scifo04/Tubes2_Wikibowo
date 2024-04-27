@@ -72,7 +72,7 @@ function SearchButton({isOn,linkValue, setResultResponse, isName, isError}) {
     };
 
     return (
-        <button onClick={handleIsLinkExist} style={{fontFamily:"Poppins",fontSize:"20px",border:"2px solid white",borderRadius:"10px",backgroundColor:"black",color:"white",width:"150px",height:"40px"}}>Start Racing</button>
+        <button onClick={handleIsLinkExist} style={{fontFamily:"Poppins",fontSize:"20px",border:"2px solid white",borderRadius:"10px",backgroundColor:"black",color:"white",width:"150px",height:"40px", marginTop: '20px'}}>Start Racing</button>
     );
 }
 
