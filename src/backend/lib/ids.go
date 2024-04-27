@@ -2,103 +2,35 @@ package back
 
 import (
 	"fmt"
-	"regexp"
-	"strings"
-
-	"github.com/gocolly/colly"
 )
 
-type Node struct {
-	Child []string
-}
-
-type Graph struct {
-	Nodes map[string]*Node
-}
-
-func NewGraph() *Graph {
-	return &Graph{
-		Nodes: make(map[string]*Node),
-	}
-}
-
-func (g *Graph) AddNode(value string, child []string) {
-	if _, exist := g.Nodes[value]; !exist {
-		newNode := &Node{
-			Child: child,
-		}
-		g.Nodes[value] = newNode
-	}
-}
-
-func getLinks(lenc string) []string {
-	var links []string
-	c := colly.NewCollector(
-		colly.DisallowedURLFilters(
-			regexp.MustCompile("Category:"),
-			regexp.MustCompile("Wikipedia:"),
-			regexp.MustCompile("Special:"),
-			regexp.MustCompile("File:"),
-			regexp.MustCompile("Help:"),
-			regexp.MustCompile("Talk:"),
-			regexp.MustCompile("Portal:"),
-			regexp.MustCompile("Template:"),
-			regexp.MustCompile("Template_talk:"),
-			regexp.MustCompile("Main_Page"),
-		),
-		colly.URLFilters(
-			regexp.MustCompile("en.wikipedia.org/wiki"),
-		),
-	)
-	// colly.AllowedDomains("en.wikipedia.org","https://en.wikipedia.org","en.wikipedia.org/","https://en.wikipedia.org/",))
-
-	c.OnRequest(func(r *colly.Request) {
-		// fmt.Println("Visiting: ", lenc)
-		r.Headers.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36")
-	})
-
-	c.OnResponse(func(r *colly.Response) {
-		// fmt.Println("Response Code:", r.StatusCode)
-	})
-
-	// to get the "a" tag
-	c.OnHTML("a", func(e *colly.HTMLElement) {
-		// Extract the text and href attribute of the <a> tag
-		linkURL := e.Attr("href")
-		if !strings.Contains(linkURL, "https://en.wikipedia.org") {
-			linkURL = "https://en.wikipedia.org" + linkURL
-		}
-
-		// Print the extracted information
-		if strings.Contains(linkURL, "https://en.wikipedia.org/wiki/") {
-			links = append(links, linkURL)
-		}
-	})
-
-	c.Visit(lenc)
-
-	return links
-}
-
-func DLS(g *Graph, src string, target string, limit int) ([]string, bool) {
+// Menjalankan fungsi dfs dengan kedalaman yang dibatasi
+func DLS(g *Graph, src string, target string, limit int, isNameSpace bool) ([]string, bool) {
+	// target dicapai
 	if limit == 0 && src == target {
 		return []string{src}, true
-	} else if limit == 0 && src != target {
+	}
+	//target belum dicapai tetapi sudah mencapai batas depth
+	if limit == 0 && src != target {
 		return nil, false
 	}
 
+	// Jika nodes ada, maka tidak perlu di-scrap lagi
 	if _, exist := g.Nodes[src]; !exist {
-		children := getLinks(src)
+		children := ScrapeIds(src, isNameSpace)
 		g.AddNode(src, children)
 	}
 
+	// Iterasi dari cache graph yang sudah dibuat
 	for i := range g.Nodes[src].Child {
+		// Jika ketemu, langsung return
 		if g.Nodes[src].Child[i] == target {
 			return []string{src, target}, true
 		}
 
+		// Jika belum ketemu, lakukan rekursi
 		if g.Nodes[src].Child[i] != src {
-			path, found := DLS(g, g.Nodes[src].Child[i], target, limit-1)
+			path, found := DLS(g, g.Nodes[src].Child[i], target, limit-1, isNameSpace)
 			if found {
 				return append([]string{src}, path...), true
 			}
@@ -108,14 +40,17 @@ func DLS(g *Graph, src string, target string, limit int) ([]string, bool) {
 	return nil, false
 }
 
-func IDS(g *Graph, src string, target string) ([]string, bool) {
+// Algoritma IDS
+func IDS(g *Graph, src string, target string, isNameSpace bool) ([]string, bool) {
+	// Inisialisasi
 	depth := 0
 	var path []string
 	found := false
 
+	// Pemanggilan fungsi DLS dengan depth yang di - increment
 	for {
 		fmt.Printf("Depth : %d\n", depth)
-		path, found = DLS(g, src, target, depth)
+		path, found = DLS(g, src, target, depth, isNameSpace)
 		if found {
 			return path, true
 		}
