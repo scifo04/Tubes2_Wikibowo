@@ -1,6 +1,6 @@
 module app
 
-go 1.23
+go 1.21.4
 
 require (
 	github.com/PuerkitoBio/goquery v1.9.1 // indirect
