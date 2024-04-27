@@ -1,37 +1,92 @@
-import React, { useState } from 'react'; 
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import './Home.css';
-import LinkForm from './components/LinkForm';
 import SearchButton from './components/SearchButton';
-import EndForm from './components/EndForm';
 import OnOff from './components/OnOff';
 import "./fonts/Inter-Bold.ttf"
+import "./fonts/Poppins-Light.otf"
 import W from "./assets/w.png"
 import Namespaces from './components/Namespaces';
 import ResList from './components/ResList';
-
+import SearchInput from './components/SearchInput'
+import Greph from './components/Greph';
+import Swal from 'sweetalert2'
 function Home() {
-  const [tempLinks, setTempLinks] = useState('');
-  const [linkValue, setLinkValue] = useState('');
-  const [finValue, setFinValue] = useState('');
+  const [linkValue, setLinkValue] = useState({
+    startLink : '',
+    endLink : '',
+  })
   const [isOn, setIsOn] = useState(false);
   const [isName, setIsName] = useState(false);
-  const [exec, setExec] = useState(0);
-  const [len, setLen] = useState(0);
-  const [urls, setUrls] = useState('');
-  const [open, setOpen] = useState('');
+  const [isError, setIsError] = useState([]);
+  const [resultResponse, setResultResponse] = useState({
+    exec : 0,
+    len : 0,
+    urls : [],
+    resultLink: [],
+  })
 
-  console.log(tempLinks);
+  const [nodes, setNodes] = useState([]);
+  const [links, setLinks] = useState([]);
+
+  useEffect(() => {
+    if (resultResponse.resultLink.length > 0) {
+      setNodes(resultResponse.resultLink.map((name, index) => ({
+        id : index+1,
+        name : name
+      })))
+    }
+  }, [resultResponse.resultLink]);
+
+  useEffect(() => {
+    if (resultResponse.resultLink.length > 1) {
+      const newLinks = [];
+      for (let i = 0; i < resultResponse.resultLink.length - 1; i++) {
+        newLinks.push({ source: i + 1, target: i + 2 });
+      }
+      setLinks(newLinks);
+    }
+  }, [resultResponse.resultLink]);
+
+  function handleInputSearch(value,type){
+    if (type === "Start"){
+      setLinkValue(prevState => {
+        return {
+          ...prevState,
+          startLink: value
+        }
+      })
+    } else if (type === "End"){
+      setLinkValue(prevState => {
+        return {
+          ...prevState,
+          endLink: value
+        }
+      })
+    }
+  }
+  const errorMessage = () => {
+    let showError = "Title "
+    showError += isError[0]
+    if (isError.length > 1) {
+      showError += " and "
+      showError += isError[1]
+    }
+    showError+= " dont exist!"
+    Swal.fire({
+      title: 'Error!',
+      text: showError,
+      icon: 'error',
+      confirmButtonText: 'Try Another Title'
+    })
+    console.log(isError)
+    setIsError([])
+  }
+
 
   return (
     <div>
-      {open && (
-        <div className="popup-overlay">
-          <div className="popup">
-            <p style={{position:"absolute",top: "35%",left: "50%",transform: "translate(-50%, -50%)"}}>Please wait...</p>
-          </div>
-        </div>
-      )}
+      {isError.length !== 0 && errorMessage()}
       <div className='topnav'>
         <img src={W} width='70px' height='70px' alt=''></img>
         <h1 style={{fontFamily:"Inter",color:"#ffffff",display:"inline-block"}}>WIKIBOWO DA WIKIRACER</h1>
@@ -44,14 +99,24 @@ function Home() {
           <OnOff isOn={isOn} setIsOn={setIsOn}/>
           <Namespaces isName={isName} setIsName={setIsName}/>
         <div>
-          <LinkForm linkValue={finValue} setLinkValue={setLinkValue}/>
-          <EndForm finValue={finValue} setFinValue={setFinValue}/>
+          <SearchInput setLinkValue= {handleInputSearch} type="Start"/>
+          <SearchInput setLinkValue= {handleInputSearch} type="End"/>
         </div>
-        <SearchButton isOn={isOn} linkValue={linkValue} finValue={finValue} isName={isName} tempLinks={tempLinks} setTempLinks={setTempLinks} setExec={setExec} setLen={setLen} setUrls={setUrls} setOpen={setOpen}/>
+        <SearchButton 
+          isOn={isOn} 
+          linkValue={linkValue} 
+          setResultResponse={setResultResponse} 
+          isName={isName} 
+          isError={setIsError}/>
       </div>
       <div>
-          <ResList  tempLinks={tempLinks} urls={urls} exec={exec} len={len}/>
+        <ResList resultResponse={resultResponse}/>
       </div>
+      {resultResponse.resultLink.length !== 0 &&
+        <div className='fourth'>
+          <Greph nodes={nodes} links={links} tempLinks={resultResponse.resultLink}></Greph>
+        </div>
+      }
     </div>
   );
 }
