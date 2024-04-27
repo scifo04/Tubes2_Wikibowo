@@ -98,7 +98,15 @@ function Home() {
       <div className='second'>
           <OnOff isOn={isOn} setIsOn={setIsOn}/>
           <Namespaces isName={isName} setIsName={setIsName}/>
-        <div>
+          <div 
+            style={{
+              marginTop: '2.5rem', 
+              display: 'flex', 
+              flexDirection: 'column',
+              gap: '1.25rem',
+              justifyContent: 'center', 
+              alignItems: 'center'
+            }}>
           <SearchInput setLinkValue= {handleInputSearch} type="Start"/>
           <SearchInput setLinkValue= {handleInputSearch} type="End"/>
         </div>

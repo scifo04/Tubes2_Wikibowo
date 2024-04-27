@@ -51,28 +51,46 @@ function SearchInput({setLinkValue,type}) {
         }
     }
     return (
-        <div>
+        <div style={{ display: 'flex',flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '50%'}}>
+            
             <input 
                 type="text" 
-                placeholder={type === "Start" ? "Insert your start wikipedia title here" : "Insert your end wikipedia title here"}
-                className="inoneline" 
+                placeholder={type === "Start" ? "Insert your start wikipedia title here" : "Insert your end wikipedia title here"} 
                 onChange={handleChange} 
                 style={{ 
-                    margin: '10px',
-                    width:'500px',
+                    marginTop: '10px',
                     height:'30px',
-                    borderRadius:'20px',
+                    borderRadius:'10px',
                     padding:'10px',
                     backgroundColor:'#200000',
                     border:'3px solid white',
-                    color:'white' }}
+                    color:'white',
+                    textAlign: 'center',
+                    width: '100%',
+                    outline: 'none',
+                }}
                     required 
             />
-            <ul>
-                {titleSuggestion.suggestions.map((title,index) => (
-                    <li key={index}>{title}</li>
-                ))}
-            </ul>
+            {titleSuggestion.suggestions.length > 0 && (
+                <ul style={{ margin: '0px', display: 'flex', flexDirection: 'column', paddingLeft: '0px', width: '100%'}}>
+                    {titleSuggestion.suggestions.slice(0,5).map((title,index) => (
+                        <button
+                            key={index}
+                            style={{
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                display: 'flex',
+                                padding: '10px',
+                                textAlign: 'center',
+                                cursor: 'pointer',
+                                backgroundColor:'#200000',
+                                color:'white',
+                                border: 'none',
+                            }}
+                        >{title}</button>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 };
