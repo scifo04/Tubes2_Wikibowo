@@ -4,6 +4,7 @@ import './Home.css';
 import SearchButton from './components/SearchButton';
 import OnOff from './components/OnOff';
 import "./fonts/Inter-Bold.ttf"
+import "./fonts/Poppins-Light.otf"
 import W from "./assets/w.png"
 import Namespaces from './components/Namespaces';
 import ResList from './components/ResList';
